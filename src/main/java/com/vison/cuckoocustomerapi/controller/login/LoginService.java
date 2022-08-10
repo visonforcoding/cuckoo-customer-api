@@ -51,6 +51,7 @@ public class LoginService {
                 loginResponse.setId(user.getId());
                 loginResponse.setUsername(user.getUsername());
                 loginResponse.setName(user.getNickname());
+                loginResponse.setToken(user.getChatId());
                 loginObj = user;
                 break;
             case OPERATOR:
@@ -64,11 +65,10 @@ public class LoginService {
                 loginResponse.setId(operator.getId());
                 loginResponse.setUsername(operator.getUsername());
                 loginResponse.setName(operator.getNickname());
+                loginResponse.setToken(operator.getChatId());
                 break;
         }
         if (Security.verifyPassword(password, pwd, this.salt)) {
-            UUID tokenUuid = UUID.randomUUID();
-            loginResponse.setToken(tokenUuid.toString());
             Gson gson = new GsonBuilder()
                     .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                     .create();
@@ -77,7 +77,7 @@ public class LoginService {
             if (loginType.equals(LoginType.USER)) {
                 prefix = App.userTokenPrefix;
             }
-            redisTemplate.opsForValue().set(prefix + tokenUuid.toString()
+            redisTemplate.opsForValue().set(prefix + loginResponse.getToken()
                     , gson.toJson(loginObj), timeout);
             return loginResponse;
         } else {

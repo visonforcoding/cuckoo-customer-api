@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,8 +41,8 @@ public class ControllerAdvice {
         log.error(errorMessage);
         response.reset();
         response.setStatus(500);
-        Map<String, StackTraceElement[]> errors = new HashMap<>();
-        errors.put("errors", ex.getStackTrace());
+        Map<String, String> errors = new HashMap<>();
+        errors.put("errors", ex.toString());
         return new Response(ResponseCode.systemError,errorMessage, errors);
     }
 }

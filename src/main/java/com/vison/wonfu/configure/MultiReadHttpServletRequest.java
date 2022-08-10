@@ -1,6 +1,7 @@
 package com.vison.wonfu.configure;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.util.StreamUtils;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
@@ -15,13 +16,17 @@ import java.io.*;
 public class MultiReadHttpServletRequest extends HttpServletRequestWrapper {
     private ByteArrayOutputStream cachedBytes;
 
+    private byte[] cachedBody;
+
     /**
      * Construct a new multi-read wrapper.
      *
      * @param request to wrap around
      */
-    public MultiReadHttpServletRequest(HttpServletRequest request) {
+    public MultiReadHttpServletRequest(HttpServletRequest request) throws IOException {
         super(request);
+        InputStream requestInputStream = request.getInputStream();
+        this.cachedBody = StreamUtils.copyToByteArray(requestInputStream);
     }
 
     @Override

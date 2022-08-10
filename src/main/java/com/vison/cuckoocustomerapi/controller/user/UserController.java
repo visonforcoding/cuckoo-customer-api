@@ -67,4 +67,9 @@ public class UserController {
         return new Response(ResponseCode.noDataFound, "获取失败");
     }
 
+    @PostMapping(path = "/test")
+    public Response test(){
+        return new Response(ResponseCode.success, "获取成功");
+    }
+
 }
